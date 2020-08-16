@@ -1,4 +1,4 @@
-obj-m := exploit.o
+obj-m := usb_driver.o
 
 CROSS_COMPILE=''
 
