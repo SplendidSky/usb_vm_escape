@@ -11,63 +11,6 @@ static struct usb_device *device;
 static struct usb_class_driver class;
 static unsigned char bulk_buf[MAX_PKT_SIZE];
 
-static struct file_operations fops =
-{
-    .owner = THIS_MODULE,
-    .open = tablet_open,
-    .release = tablet_close,
-    .read = tablet_read,
-    .write = tablet_write,
-};
-
-static int tablet_probe(struct usb_interface *interface, const struct usb_device_id *id)
-{
-    int retval;
-
-    device = interface_to_usbdev(interface);
-
-    class.name = "usb/tablet%d";
-    class.fops = &fops;
-    if ((retval = usb_register_dev(interface, &class)) < 0)
-    {
-        /* Something prevented us from registering this driver */
-        printk(KERN_ERR "Not able to get a minor for this device.");
-    }
-    else
-    {
-        printk(KERN_INFO "Minor obtained: %d\n", interface->minor);
-    }
-
-    return retval;
-}
-
-static void tablet_disconnect(struct usb_interface *interface)
-{
-    printk(KERN_INFO "Tablet drive removed\n");
-}
-
-static struct usb_device_id tablet_table[] =
-{
-    { USB_DEVICE(0x0627, 0x0001) },
-    {} /* Terminating entry */
-};
-MODULE_DEVICE_TABLE (usb, tablet_table);
-
-static int __init tablet_init(void)
-{
-    /* Register this driver with the USB subsystem */
-    if ((result = usb_register(&tablet_driver)))
-    {
-        printk(KERN_ERR "usb_register failed. Error number %d", result);
-    }
-    return result;
-}
-
-static void __exit tablet_exit(void)
-{
-    usb_deregister(&tablet_driver);
-}
-
 static int tablet_open(struct inode *i, struct file *f)
 {
     return 0;
@@ -121,6 +64,48 @@ static ssize_t tablet_write(struct file *f, const char __user *buf, size_t cnt,
     return wrote_cnt;
 }
 
+static struct file_operations fops =
+{
+    .owner = THIS_MODULE,
+    .open = tablet_open,
+    .release = tablet_close,
+    .read = tablet_read,
+    .write = tablet_write,
+};
+
+static int tablet_probe(struct usb_interface *interface, const struct usb_device_id *id)
+{
+    int retval;
+
+    device = interface_to_usbdev(interface);
+
+    class.name = "usb/tablet%d";
+    class.fops = &fops;
+    if ((retval = usb_register_dev(interface, &class)) < 0)
+    {
+        /* Something prevented us from registering this driver */
+        printk(KERN_ERR "Not able to get a minor for this device.");
+    }
+    else
+    {
+        printk(KERN_INFO "Minor obtained: %d\n", interface->minor);
+    }
+
+    return retval;
+}
+
+static void tablet_disconnect(struct usb_interface *interface)
+{
+    printk(KERN_INFO "Tablet drive removed\n");
+}
+
+static struct usb_device_id tablet_table[] =
+{
+    { USB_DEVICE(0x0627, 0x0001) },
+    {} /* Terminating entry */
+};
+MODULE_DEVICE_TABLE (usb, tablet_table);
+
 
 static struct usb_driver tablet_driver =
 {
@@ -129,6 +114,21 @@ static struct usb_driver tablet_driver =
     .probe = tablet_probe,
     .disconnect = tablet_disconnect,
 };
+
+static int __init tablet_init(void)
+{
+    /* Register this driver with the USB subsystem */
+    if ((result = usb_register(&tablet_driver)))
+    {
+        printk(KERN_ERR "usb_register failed. Error number %d", result);
+    }
+    return result;
+}
+
+static void __exit tablet_exit(void)
+{
+    usb_deregister(&tablet_driver);
+}
 
 module_init(tablet_init);
 module_exit(tablet_exit);
