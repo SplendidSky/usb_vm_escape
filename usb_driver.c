@@ -117,6 +117,8 @@ static struct usb_driver tablet_driver =
 
 static int __init tablet_init(void)
 {
+    int result;
+    
     /* Register this driver with the USB subsystem */
     if ((result = usb_register(&tablet_driver)))
     {
