@@ -4,7 +4,7 @@
 
 #define MIN(a,b) (((a) <= (b)) ? (a) : (b))
 #define BULK_EP_OUT 0x01
-#define BULK_EP_IN 0x82
+#define BULK_EP_IN 0x81
 #define MAX_PKT_SIZE 512
 
 static struct usb_device *device;
