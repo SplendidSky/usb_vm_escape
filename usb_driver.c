@@ -39,12 +39,12 @@ static int tablet_probe(struct usb_interface *interface, const struct usb_device
     interface=intf->cur_altsetting;
     endpoint = &interface->endpoint[0].desc;
    
-    printk(KERN_INFO "VID=%x,PID=%x\n",device->descriptor.idVendor,dev->descriptor.idProduct);
+    printk(KERN_INFO "VID=%x,PID=%x\n",device->descriptor.idVendor,device->descriptor.idProduct);
 
-    pipe = usb_rcvintpipe(dev,endpoint->bEndpointAddress);
+    pipe = usb_rcvintpipe(device,endpoint->bEndpointAddress);
 
     class.name = "usb/tablet%d";
-    class.fops = &fops;
+    // class.fops = &fops;
     if ((retval = usb_register_dev(interface, &class)) < 0)
     {
         /* Something prevented us from registering this driver */
