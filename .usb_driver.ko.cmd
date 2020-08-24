@@ -1,0 +1,1 @@
+cmd_/root/usb_vm_escape/usb_driver.ko := ld -r -m elf_x86_64 -T ./scripts/module-common.lds --build-id  -o /root/usb_vm_escape/usb_driver.ko /root/usb_vm_escape/usb_driver.o /root/usb_vm_escape/usb_driver.mod.o

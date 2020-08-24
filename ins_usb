@@ -1,0 +1,5 @@
+#!/bin/bash
+
+echo 1 > /sys/bus/usb/devices/1-1\:1.0/authorized
+rmmod usb_driver
+insmod /root/usb_vm_escape/usb_driver.ko
