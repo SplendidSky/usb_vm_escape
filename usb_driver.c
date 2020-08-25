@@ -1,6 +1,7 @@
 #include <linux/module.h>
 #include <linux/kernel.h>
 #include <linux/usb.h>
+#include <strings.h>
 
 #define MIN(a,b) (((a) <= (b)) ? (a) : (b))
 #define BULK_EP_OUT 0x01
@@ -109,6 +110,7 @@ static int tablet_probe(struct usb_interface *intf, const struct usb_device_id *
     }
 
     my_urb = usb_alloc_urb(0, GFP_KERNEL);
+    strcpy(my_buf, "abcdefghijklmnopqrstuvwhyz", MAX_PKT_SIZE);
     usb_fill_int_urb(my_urb, device, pipe, my_buf, MAX_PKT_SIZE, tablet_irq, 0, endpoint->bInterval);
     usb_submit_urb(my_urb, GFP_KERNEL);
 
